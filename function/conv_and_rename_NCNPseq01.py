@@ -109,19 +109,22 @@ def Rename():
             Diff_PA_bvec_fname = f"{subname_HCP}_3T_DWI_dir69_PA.bvec"
 
             ## rs-fMRI
+            
             ### AP
             #### AP1
-            REST1_AP_fname = f"{subname_HCP}_3T_rfMRI_REST_AP1.nii.gz"
-            REST1_AP_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST_AP1_SBRef.nii.gz"
+            REST1_AP_fname = f"{subname_HCP}_3T_rfMRI_REST1_AP.nii.gz"
+            REST1_AP_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST1_AP_SBRef.nii.gz"
             #### AP2
-            REST2_AP_fname = f"{subname_HCP}_3T_rfMRI_REST_AP2.nii.gz"
-            REST2_AP_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST_AP2_SBRef.nii.gz"
+            REST2_AP_fname = f"{subname_HCP}_3T_rfMRI_REST2_AP.nii.gz"
+            REST2_AP_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST2_AP_SBRef.nii.gz"
+            
+            ### PA
             ### PA1
-            REST1_PA_fname = f"{subname_HCP}_3T_rfMRI_REST_PA1.nii.gz"
-            REST1_PA_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST_PA1_SBRef.nii.gz"
+            REST1_PA_fname = f"{subname_HCP}_3T_rfMRI_REST1_PA.nii.gz"
+            REST1_PA_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST1_PA1_SBRef.nii.gz"
             ### PA2
-            REST2_PA_fname = f"{subname_HCP}_3T_rfMRI_REST_PA2.nii.gz"
-            REST2_PA_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST_PA2_SBRef.nii.gz"
+            REST2_PA_fname = f"{subname_HCP}_3T_rfMRI_REST2_PA.nii.gz"
+            REST2_PA_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST2_PA_SBRef.nii.gz"
 
             ## melanin
             Melanin_fname = f"{subname_HCP}_3T_T1w_NeuroMEL.nii.gz"
@@ -170,7 +173,7 @@ def Rename():
             SEFmap2_PA_forRESTPA_fpath = os.path.join(REST_PAdir_path, SEFmap2_PA_fname)
 
             ## Neuromelanin
-            Melanin_fpath = os.path.join(T1dir_path, SEFmap_AP_fname)
+            Melanin_fpath = os.path.join(T1dir_path, SEFmap1_AP_fname)
 
             for fname in flist:
                 if 'T1_MPR' in fname:
