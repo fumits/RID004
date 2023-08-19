@@ -111,18 +111,18 @@ def Rename():
             ## rs-fMRI
             
             ### AP
-            #### AP1
+            #### REST1
             REST1_AP_fname = f"{subname_HCP}_3T_rfMRI_REST1_AP.nii.gz"
             REST1_AP_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST1_AP_SBRef.nii.gz"
-            #### AP2
+            #### REST2
             REST2_AP_fname = f"{subname_HCP}_3T_rfMRI_REST2_AP.nii.gz"
             REST2_AP_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST2_AP_SBRef.nii.gz"
             
             ### PA
-            ### PA1
+            ### REST1
             REST1_PA_fname = f"{subname_HCP}_3T_rfMRI_REST1_PA.nii.gz"
-            REST1_PA_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST1_PA1_SBRef.nii.gz"
-            ### PA2
+            REST1_PA_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST1_PA_SBRef.nii.gz"
+            ### REST2
             REST2_PA_fname = f"{subname_HCP}_3T_rfMRI_REST2_PA.nii.gz"
             REST2_PA_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST2_PA_SBRef.nii.gz"
 
@@ -198,22 +198,22 @@ def Rename():
                     shutil.copy2(fname, Diff_PA_bvec_fpath)
                     
                 elif 'REST1_AP' in fname and '7.nii.gz' in fname:
-                    shutil.copy2(fname, REST_AP_SBRef_fpath)
+                    shutil.copy2(fname, REST1_AP_SBRef_fpath)
                 elif 'REST1_AP' in fname and '8.nii.gz' in fname:
-                    shutil.copy2(fname, REST_AP_fpath)  
+                    shutil.copy2(fname, REST1_AP_fpath)  
                 elif 'REST2_AP' in fname and '26.nii.gz' in fname:
-                    shutil.copy2(fname, REST_AP_SBRef_fpath)
+                    shutil.copy2(fname, REST2_AP_SBRef_fpath)
                 elif 'REST2_AP' in fname and '27.nii.gz' in fname:
-                    shutil.copy2(fname, REST_AP_fpath)                
+                    shutil.copy2(fname, REST2_AP_fpath)                
             
                 elif 'REST1_PA' in fname and '10.nii.gz' in fname:
-                    shutil.copy2(fname, REST_PA_SBRef_fpath)
+                    shutil.copy2(fname, REST1_PA_SBRef_fpath)
                 elif 'REST1_PA' in fname and '11.nii.gz' in fname:
-                    shutil.copy2(fname, REST_PA_fpath)
+                    shutil.copy2(fname, REST1_PA_fpath)
                 elif 'REST2_PA' in fname and '29.nii.gz' in fname:
-                    shutil.copy2(fname, REST_PA_SBRef_fpath)
+                    shutil.copy2(fname, REST2_PA_SBRef_fpath)
                 elif 'REST2_PA' in fname and '30.nii.gz' in fname:
-                    shutil.copy2(fname, REST_PA_fpath)
+                    shutil.copy2(fname, REST2_PA_fpath)
 
                 elif 'SEField1_AP' in fname:
                     shutil.copy2(fname, SEFmap1_AP_forT1_fpath)
