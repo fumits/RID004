@@ -6,6 +6,8 @@
 # ver 1.2 (2022/6/11)
 # ver 1.3 (2022/10/6)
 # Written by Yusuke Kyuragi 
+# ver 1.3.1 (2023/8/19)
+# Modified by Fumitoshi Kodaka
 #########################################################
 
 import os, glob, subprocess, shutil, re
@@ -13,6 +15,7 @@ import os, glob, subprocess, shutil, re
 def Conv_nii(path):
     sublist = [i for i in os.listdir(path) if os.path.isdir(os.path.join(path, i))]
     sublist = sorted(sublist)
+    # sublist = ["NC0144","NC0145"...]
 
     for i in range(len(sublist)):
         subname = sublist[i]
@@ -53,7 +56,7 @@ def Rename():
     path = "./img_nii" 
     sublist = [i for i in os.listdir(path) if os.path.isdir(os.path.join(path, i))]
     sublist = sorted(sublist)
-    # sublist: [NC0144]
+    # sublist: [NC0144,NC0134..]
 
     for i in range(len(sublist)):
         subname = sublist[i]
@@ -62,18 +65,20 @@ def Rename():
         # subpath_: ./img_nii/NC0144
 
         datelist = [p for p in os.listdir(subpath_) if os.path.isdir(os.path.join(subpath_, p))]
-        datelist = sorted(datelist) # If datelist is Pre/Mid/Follow, they will convert to number (0, 1, 2)
-        # datelist: [1,2,3]
-        # datelist: [1,2,3] <- sorted
+        datelist = sorted(datelist) # datelist = [1,2,3], 1=pre, 2=post, 3=follow
+        # datelist: [1,3]
+        # datelist: [1,3] <- sorted
+        
+        datelist_int = [int(i) for i in datelist]
 
-        for j in range(len(datelist)):
-            flist = [f for f in glob.glob(os.path.join(subpath_, datelist[j], "*")) \
+        for j in datelist_int:
+            flist = [f for f in glob.glob(os.path.join(subpath_, str(datelist_int), "*")) \
                 if re.search('.*(.nii.gz$|.bval$|.bvec$)', f)]
             # flist: [*.nii.gz, *.bval, *bvec]
             timepoint = ["Pre", "Post", "Follow"]
             subname_HCP = "sub-" + subname[2:]
 
-            r_niipath_ = os.path.join("./rename_img_nii", timepoint[j], "Images", subname_HCP, "unprocessed/3T")
+            r_niipath_ = os.path.join("./rename_img_nii", timepoint[j-1], "Images", subname_HCP, "unprocessed/3T")
             T1dir_path = os.path.join(r_niipath_, "T1w_MPR1")
             T2dir_path = os.path.join(r_niipath_, "T2w_SPC1")
             Diffdir_path = os.path.join(r_niipath_, "Diffusion")

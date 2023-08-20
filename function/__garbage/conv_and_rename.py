@@ -15,6 +15,7 @@ import os, glob, subprocess, shutil, re
 def Conv_nii(path):
     sublist = [i for i in os.listdir(path) if os.path.isdir(os.path.join(path, i))]
     sublist = sorted(sublist)
+    # sublist = ["NC0144","NC0145"...]
 
     for i in range(len(sublist)):
         subname = sublist[i]
@@ -64,7 +65,7 @@ def Rename():
         # subpath_: ./img_nii/NC0144
 
         datelist = [p for p in os.listdir(subpath_) if os.path.isdir(os.path.join(subpath_, p))]
-        datelist = sorted(datelist) # If datelist is Pre/Mid/Follow, they will convert to number (0, 1, 2)
+        datelist = sorted(datelist) # datelist = [1,2,3], 1=pre, 2=post, 3=follow
         # datelist: [1,2,3]
         # datelist: [1,2,3] <- sorted
 
@@ -92,12 +93,10 @@ def Rename():
             T2_fname = f"{subname_HCP}_3T_T2w_SPC1.nii.gz"
 
             ## SE field map
-            SEFmap1_AP_fname = f"{subname_HCP}_3T_SpinEchoFieldMap1_AP.nii.gz"
-            SEFmap1_PA_fname = f"{subname_HCP}_3T_SpinEchoFieldMap1_PA.nii.gz"
-            SEFmap2_AP_fname = f"{subname_HCP}_3T_SpinEchoFieldMap2_AP.nii.gz"
-            SEFmap2_PA_fname = f"{subname_HCP}_3T_SpinEchoFieldMap2_PA.nii.gz"
+            SEFmap_AP_fname = f"{subname_HCP}_3T_SpinEchoFieldMap_AP.nii.gz"
+            SEFmap_PA_fname = f"{subname_HCP}_3T_SpinEchoFieldMap_PA.nii.gz"
 
-            ## diffusion 軸数=bvecファイルの行方向のデータ数, sn16=68軸, sn17=11軸, sn21=69軸, sn22=11軸
+            ## diffusion 軸数=bvecファイルの行方向のデータ数
             Diff_AP_fname = f"{subname_HCP}_3T_DWI_dir68_AP.nii.gz"
             Diff_AP_SBRef_fname = f"{subname_HCP}_3T_DWI_dir68_AP_SBRef.nii.gz"
             Diff_AP_bval_fname = f"{subname_HCP}_3T_DWI_dir68_AP.bval"
@@ -109,28 +108,18 @@ def Rename():
             Diff_PA_bvec_fname = f"{subname_HCP}_3T_DWI_dir69_PA.bvec"
 
             ## rs-fMRI
-            
             ### AP
-            #### REST1
-            REST1_AP_fname = f"{subname_HCP}_3T_rfMRI_REST1_AP.nii.gz"
-            REST1_AP_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST1_AP_SBRef.nii.gz"
-            #### REST2
-            REST2_AP_fname = f"{subname_HCP}_3T_rfMRI_REST2_AP.nii.gz"
-            REST2_AP_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST2_AP_SBRef.nii.gz"
-            
+            REST_AP_fname = f"{subname_HCP}_3T_rfMRI_REST_AP.nii.gz"
+            REST_AP_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST_AP_SBRef.nii.gz"
             ### PA
-            ### REST1
-            REST1_PA_fname = f"{subname_HCP}_3T_rfMRI_REST1_PA.nii.gz"
-            REST1_PA_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST1_PA_SBRef.nii.gz"
-            ### REST2
-            REST2_PA_fname = f"{subname_HCP}_3T_rfMRI_REST2_PA.nii.gz"
-            REST2_PA_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST2_PA_SBRef.nii.gz"
+            REST_PA_fname = f"{subname_HCP}_3T_rfMRI_REST_PA.nii.gz"
+            REST_PA_SBRef_fname = f"{subname_HCP}_3T_rfMRI_REST_PA_SBRef.nii.gz"
 
             ## melanin
             Melanin_fname = f"{subname_HCP}_3T_T1w_NeuroMEL.nii.gz"
 
 
-            # 各モダリティの相対パス+ファイル名
+            # 各モダリティの相対パス
             ## sMRI
             T1_fpath = os.path.join(T1dir_path, T1_fname)
             T2_fpath = os.path.join(T2dir_path, T2_fname)
@@ -146,34 +135,21 @@ def Rename():
             Diff_PA_bvec_fpath = os.path.join(Diffdir_path, Diff_PA_bvec_fname)
 
             ## rs-fMRI
-            REST1_AP_fpath = os.path.join(REST_APdir_path, REST1_AP_fname)
-            REST1_AP_SBRef_fpath = os.path.join(REST_APdir_path, REST1_AP_SBRef_fname)
-            REST2_AP_fpath = os.path.join(REST_APdir_path, REST2_AP_fname)
-            REST2_AP_SBRef_fpath = os.path.join(REST_APdir_path, REST2_AP_SBRef_fname)
-      
-            REST1_PA_fpath = os.path.join(REST_PAdir_path, REST1_PA_fname)
-            REST1_PA_SBRef_fpath = os.path.join(REST_PAdir_path, REST1_PA_SBRef_fname)
-            REST2_PA_fpath = os.path.join(REST_PAdir_path, REST2_PA_fname)
-            REST2_PA_SBRef_fpath = os.path.join(REST_PAdir_path, REST2_PA_SBRef_fname)
+            REST_AP_fpath = os.path.join(REST_APdir_path, REST_AP_fname)
+            REST_AP_SBRef_fpath = os.path.join(REST_APdir_path, REST_AP_SBRef_fname)
+            REST_PA_fpath = os.path.join(REST_PAdir_path, REST_PA_fname)
+            REST_PA_SBRef_fpath = os.path.join(REST_PAdir_path, REST_PA_SBRef_fname)
 
             ## SE field map
-            SEFmap1_AP_forT1_fpath = os.path.join(T1dir_path, SEFmap1_AP_fname)
-            SEFmap1_PA_forT1_fpath = os.path.join(T1dir_path, SEFmap1_PA_fname)
-            SEFmap2_AP_forT1_fpath = os.path.join(T1dir_path, SEFmap2_AP_fname)
-            SEFmap2_PA_forT1_fpath = os.path.join(T1dir_path, SEFmap2_PA_fname)
-            
-            SEFmap1_AP_forRESTAP_fpath = os.path.join(REST_APdir_path, SEFmap1_AP_fname)
-            SEFmap1_PA_forRESTAP_fpath = os.path.join(REST_APdir_path, SEFmap1_PA_fname)
-            SEFmap2_AP_forRESTAP_fpath = os.path.join(REST_APdir_path, SEFmap2_AP_fname)
-            SEFmap2_PA_forRESTAP_fpath = os.path.join(REST_APdir_path, SEFmap2_PA_fname)
-            
-            SEFmap1_AP_forRESTPA_fpath = os.path.join(REST_PAdir_path, SEFmap1_AP_fname)
-            SEFmap1_PA_forRESTPA_fpath = os.path.join(REST_PAdir_path, SEFmap1_PA_fname)
-            SEFmap2_AP_forRESTPA_fpath = os.path.join(REST_PAdir_path, SEFmap2_AP_fname)
-            SEFmap2_PA_forRESTPA_fpath = os.path.join(REST_PAdir_path, SEFmap2_PA_fname)
+            SEFmap_AP_forT1_fpath = os.path.join(T1dir_path, SEFmap_AP_fname)
+            SEFmap_PA_forT1_fpath = os.path.join(T1dir_path, SEFmap_PA_fname)
+            SEFmap_AP_forRESTAP_fpath = os.path.join(REST_APdir_path, SEFmap_AP_fname)
+            SEFmap_PA_forRESTAP_fpath = os.path.join(REST_APdir_path, SEFmap_PA_fname)
+            SEFmap_AP_forRESTPA_fpath = os.path.join(REST_PAdir_path, SEFmap_AP_fname)
+            SEFmap_PA_forRESTPA_fpath = os.path.join(REST_PAdir_path, SEFmap_PA_fname)
 
             ## Neuromelanin
-            Melanin_fpath = os.path.join(T1dir_path, SEFmap1_AP_fname)
+            Melanin_fpath = os.path.join(T1dir_path, SEFmap_AP_fname)
 
             for fname in flist:
                 if 'T1_MPR' in fname:
@@ -196,40 +172,22 @@ def Rename():
                     shutil.copy2(fname, Diff_PA_bval_fpath)
                 elif '21.bvec' in fname:
                     shutil.copy2(fname, Diff_PA_bvec_fpath)
-                    
                 elif 'REST1_AP' in fname and '7.nii.gz' in fname:
-                    shutil.copy2(fname, REST1_AP_SBRef_fpath)
+                    shutil.copy2(fname, REST_AP_SBRef_fpath)
                 elif 'REST1_AP' in fname and '8.nii.gz' in fname:
-                    shutil.copy2(fname, REST1_AP_fpath)  
-                elif 'REST2_AP' in fname and '26.nii.gz' in fname:
-                    shutil.copy2(fname, REST2_AP_SBRef_fpath)
-                elif 'REST2_AP' in fname and '27.nii.gz' in fname:
-                    shutil.copy2(fname, REST2_AP_fpath)                
-            
+                    shutil.copy2(fname, REST_AP_fpath)    
                 elif 'REST1_PA' in fname and '10.nii.gz' in fname:
-                    shutil.copy2(fname, REST1_PA_SBRef_fpath)
+                    shutil.copy2(fname, REST_PA_SBRef_fpath)
                 elif 'REST1_PA' in fname and '11.nii.gz' in fname:
-                    shutil.copy2(fname, REST1_PA_fpath)
-                elif 'REST2_PA' in fname and '29.nii.gz' in fname:
-                    shutil.copy2(fname, REST2_PA_SBRef_fpath)
-                elif 'REST2_PA' in fname and '30.nii.gz' in fname:
-                    shutil.copy2(fname, REST2_PA_fpath)
-
+                    shutil.copy2(fname, REST_PA_fpath)
                 elif 'SEField1_AP' in fname:
-                    shutil.copy2(fname, SEFmap1_AP_forT1_fpath)
-                    shutil.copy2(fname, SEFmap1_AP_forRESTAP_fpath)
-                    shutil.copy2(fname, SEFmap1_AP_forRESTPA_fpath)
-                    shutil.copy2(fname, SEFmap2_AP_forT1_fpath)
-                    shutil.copy2(fname, SEFmap2_AP_forRESTAP_fpath)
-                    shutil.copy2(fname, SEFmap2_AP_forRESTPA_fpath)
-                    
+                    shutil.copy2(fname, SEFmap_AP_forT1_fpath)
+                    shutil.copy2(fname, SEFmap_AP_forRESTAP_fpath)
+                    shutil.copy2(fname, SEFmap_AP_forRESTPA_fpath)
                 elif 'SEField1_PA' in fname:
-                    shutil.copy2(fname, SEFmap1_PA_forT1_fpath)
-                    shutil.copy2(fname, SEFmap1_PA_forRESTAP_fpath)
-                    shutil.copy2(fname, SEFmap1_PA_forRESTPA_fpath)
-                    shutil.copy2(fname, SEFmap2_PA_forT1_fpath)
-                    shutil.copy2(fname, SEFmap2_PA_forRESTAP_fpath)
-                    shutil.copy2(fname, SEFmap2_PA_forRESTPA_fpath)
+                    shutil.copy2(fname, SEFmap_PA_forT1_fpath)
+                    shutil.copy2(fname, SEFmap_PA_forRESTAP_fpath)
+                    shutil.copy2(fname, SEFmap_PA_forRESTPA_fpath)
                 else:
                     pass
 
